@@ -15,12 +15,14 @@ interface FetchNotesResponse {
 export const fetchNotes = async (
   page: number,
   search: string,
+  tag?: string,
 ): Promise<FetchNotesResponse> => {
   const response = await api.get<FetchNotesResponse>("/notes", {
     params: {
       page,
       perPage: 12,
       search,
+      ...(tag ? { tag } : {}),
     },
   });
   return response.data;
