@@ -20,6 +20,7 @@ export default function NotePreviewClient({ id }: NotePreviewClientProps) {
   } = useQuery({
     queryKey: ["note", id],
     queryFn: () => fetchNoteById(id),
+    refetchOnMount: false,
   });
 
   if (isLoading) {
@@ -33,6 +34,13 @@ export default function NotePreviewClient({ id }: NotePreviewClientProps) {
   return (
     <Modal onClose={() => router.back()}>
       <div className={css.container}>
+        <button
+          type="button"
+          className={css.backBtn}
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
         <h2 className={css.title}>{note.title}</h2>
         <p className={css.content}>{note.content}</p>
         <p className={css.tag}>{note.tag}</p>
