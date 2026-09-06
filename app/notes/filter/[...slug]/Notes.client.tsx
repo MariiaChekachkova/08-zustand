@@ -6,8 +6,7 @@ import SearchBox from "@/components/SearchBox/SearchBox";
 import Pagination from "@/components/Pagination/Pagination";
 import NoteList from "@/components/NoteList/NoteList";
 import css from "./NotesPage.module.css";
-import Modal from "@/components/Modal/Modal";
-import NoteForm from "@/components/NoteForm/NoteForm";
+import Link from "next/link";
 import { useDebounce } from "use-debounce";
 
 interface NotesClientProps {
@@ -18,7 +17,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 500);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { data, isLoading, isError } = useQuery({
     queryKey: ["notes", page, debouncedSearch, tag],
     queryFn: () => fetchNotes(page, debouncedSearch, tag),
@@ -42,9 +41,9 @@ export default function NotesClient({ tag }: NotesClientProps) {
               setPage(1);
             }}
           />
-          <button className={css.button} onClick={() => setIsModalOpen(true)}>
+          <Link href="/notes/action/create" className={css.button}>
             Create Note +
-          </button>
+          </Link>
         </div>
 
         {data.totalPages > 1 && (
@@ -57,11 +56,6 @@ export default function NotesClient({ tag }: NotesClientProps) {
 
         <NoteList notes={data.notes} />
       </main>
-      {isModalOpen && (
-        <Modal onClose={() => setIsModalOpen(false)}>
-          <NoteForm onCancel={() => setIsModalOpen(false)} />
-        </Modal>
-      )}
     </>
   );
 }
